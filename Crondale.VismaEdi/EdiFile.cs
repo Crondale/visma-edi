@@ -24,6 +24,22 @@ namespace Crondale.VismaEdi
             this.firmId = firmId;
         }
 
+        private IEnumerable<EdiSet> sortedSets
+        {
+            get
+            {
+                List<EdiSet> result = new List<EdiSet>(sets.Values);
+
+                result.Sort();
+
+                foreach (EdiSet set in result)
+                {
+                    yield return set;
+                }
+            }
+        }
+
+
         public void RemoveUnusedFields()
         {
             foreach(EdiSet set in sets.Values)
@@ -70,6 +86,17 @@ namespace Crondale.VismaEdi
 
             writer.WriteLine("@IMPORT_METHOD(1)");
 
+            foreach (EdiSet set in sortedSets)
+            {
+                writer.WriteLine("@{0} (={1})", set.Name, String.Join(",", set.Headers));
+                
+                foreach(EdiRow row in set)
+                {
+                    writer.WriteLine(String.Join(",", set.Headers.Select(h => "\"" + row[h] + "\"")));
+                }
+
+                writer.WriteLine();
+            }
 
 
             writer.Close();

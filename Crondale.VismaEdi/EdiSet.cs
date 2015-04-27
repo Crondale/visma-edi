@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Crondale.VismaEdi
 {
-    class EdiSet
+    class EdiSet : IEnumerable<EdiRow>
     {
 
         internal int Priority { get; set; }
@@ -96,5 +96,15 @@ namespace Crondale.VismaEdi
         }
 
 
+
+        public IEnumerator<EdiRow> GetEnumerator()
+        {
+            return rows.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return rows.GetEnumerator();
+        }
     }
 }
