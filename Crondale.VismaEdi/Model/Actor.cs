@@ -7,10 +7,14 @@ using System.Threading.Tasks;
 
 namespace Crondale.VismaEdi.Model
 {
-    [EdiElement(Priority=10)]
+    [EdiElement(IdentifyByFirst=true)]
     public class Actor : EdiModel
     {
         public String ActNo { get; set; }
+        public String CustNo { get; set; }
+        public String SupNo { get; set; }
+        public String EmpNo { get; set; }
+
         public String Nm { get; set; }
         public String Ad1 { get; set; }
         public String Ad2 { get; set; }
@@ -27,11 +31,8 @@ namespace Crondale.VismaEdi.Model
         public String MobPh { get; set; }
         public String Pers { get; set; }
         public String Fax { get; set; }
-        public String CustNo { get; set; }
         public String NwCustNo { get; set; }
-        public String SupNo { get; set; }
         public String NwSupNo { get; set; }
-        public String EmpNo { get; set; }
         public String NwEmpNo { get; set; }
         public String Title { get; set; }
         public String LiaAct { get; set; }

@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Crondale.VismaEdi
+namespace Crondale.VismaEdi.File
 {
-    class EdiSet : IEnumerable<EdiRow>
+    public class EdiTable : IEnumerable<EdiRow>
     {
 
-        internal int Priority { get; set; }
+        internal int ImportMethod { get; set; }
         internal String Name { get; set; }
-
 
         internal List<String> Headers
         {
@@ -25,15 +24,10 @@ namespace Crondale.VismaEdi
         private List<String> headers = new List<String>();
 
 
-        internal EdiSet(string name)
-            :this(name, 50)
-        {
-        }
-
-        internal EdiSet(string name, int pri)
+        internal EdiTable(string name)
         {
             Name = name;
-            Priority = pri;
+            ImportMethod = 1;
         }
 
 

@@ -9,7 +9,8 @@ namespace Crondale.VismaEdi.Attributes
     class EdiElementAttribute : Attribute
     {
 
-        public int Priority { get; set; }
+        public String Name { get; set; }
 
+        public bool IdentifyByFirst { get; set; }
     }
 }

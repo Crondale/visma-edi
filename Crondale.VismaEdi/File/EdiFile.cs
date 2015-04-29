@@ -6,12 +6,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Crondale.VismaEdi
+namespace Crondale.VismaEdi.File
 {
     public class EdiFile
     {
         private string firmId = "1";
-        private Dictionary<String, EdiSet> sets = new Dictionary<String, EdiSet>();
+        private List<EdiTable> sets = new List<EdiTable>();
 
         public EdiFile()
         {
@@ -24,52 +24,25 @@ namespace Crondale.VismaEdi
             this.firmId = firmId;
         }
 
-        private IEnumerable<EdiSet> sortedSets
-        {
-            get
-            {
-                List<EdiSet> result = new List<EdiSet>(sets.Values);
-
-                result.Sort();
-
-                foreach (EdiSet set in result)
-                {
-                    yield return set;
-                }
-            }
-        }
-
-
         public void RemoveUnusedFields()
         {
-            foreach(EdiSet set in sets.Values)
+            foreach(EdiTable set in sets)
             {
                 set.RemoveUnusedFields();
             }
         }
 
-        public String[,] GetTable(String key)
-        {
-            return this[key].GetTable();
-        }
-
-        internal EdiSet this[String key]
+        internal EdiTable this[int index]
         {
             get
             {
-                if (!sets.ContainsKey(key))
-                    return null;
-
-                return sets[key];
+                return sets[index];
             }
         }
 
-        internal void Add(EdiSet ediSet)
+        internal void Add(EdiTable ediSet)
         {
-            if (sets.ContainsKey(ediSet.Name))
-                throw new NotImplementedException(); //TODO Implement set merging
-
-            sets[ediSet.Name] = ediSet;
+            sets.Add(ediSet);
         }
 
         public void Save(String path)
@@ -84,11 +57,11 @@ namespace Crondale.VismaEdi
             writer.WriteLine("@FIRM_BEGIN({0})", firmId);
             writer.WriteLine();
 
-            writer.WriteLine("@IMPORT_METHOD(1)");
-
-            foreach (EdiSet set in sortedSets)
+            foreach (EdiTable set in sets)
             {
-                writer.WriteLine("@{0} (={1})", set.Name, String.Join(",", set.Headers));
+                writer.WriteLine("@IMPORT_METHOD({0})", set.ImportMethod);
+
+                writer.WriteLine("@{0} ({1}{2})", set.Name, set.ImportMethod == 1 ? "=" : "", String.Join(",", set.Headers));
                 
                 foreach(EdiRow row in set)
                 {
@@ -112,7 +85,7 @@ namespace Crondale.VismaEdi
             TextReader reader = new StreamReader(stream, Encoding.GetEncoding(1252));
 
             EdiFile ediFile = new EdiFile();
-            EdiSet ediSet = null;
+            EdiTable ediSet = null;
 
             while (true)
             {
@@ -131,7 +104,7 @@ namespace Crondale.VismaEdi
 
                     if (match.Success)
                     {
-                        ediSet = new EdiSet(match.Groups["name"].Value);
+                        ediSet = new EdiTable(match.Groups["name"].Value);
 
                         foreach (Capture header in match.Groups["header"].Captures)
                         {

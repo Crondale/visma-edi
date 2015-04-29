@@ -41,13 +41,14 @@
   <ItemGroup>
     <Compile Include="Attributes\EdiElementAttribute.cs" />
     <Compile Include="Data.cs" />
-    <Compile Include="EdiFile.cs" />
-    <Compile Include="EdiModelCollection.cs" />
+    <Compile Include="File\EdiFile.cs" />
     <Compile Include="EdiPackage.cs" />
-    <Compile Include="EdiRow.cs" />
-    <Compile Include="EdiSet.cs" />
+    <Compile Include="File\EdiRow.cs" />
+    <Compile Include="File\EdiTable.cs" />
     <Compile Include="Model\Actor.cs" />
     <Compile Include="Model\EdiModel.cs" />
+    <Compile Include="Model\Order.cs" />
+    <Compile Include="Model\OrderLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

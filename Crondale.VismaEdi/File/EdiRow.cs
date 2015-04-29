@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Crondale.VismaEdi
+namespace Crondale.VismaEdi.File
 {
-    class EdiRow
+    public class EdiRow
     {
 
         private Dictionary<String, String> fields = new Dictionary<string, string>();

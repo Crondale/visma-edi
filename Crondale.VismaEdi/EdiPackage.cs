@@ -1,4 +1,5 @@
-﻿using Crondale.VismaEdi.Model;
+﻿using Crondale.VismaEdi.File;
+using Crondale.VismaEdi.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,45 +12,56 @@ namespace Crondale.VismaEdi
     public class EdiPackage
     {
 
+        private List<Actor> actors = new List<Actor>();
+
+        private List<Order> orders = new List<Order>();
+
         String firmId;
-
-        private Dictionary<String, EdiModelCollection> elements = new Dictionary<String, EdiModelCollection>();
-
 
         public EdiPackage(String firmId)
         {
             this.firmId = firmId;
         }
 
-
-        private List<EdiModelCollection> sortedElements()
+        public void Add(Actor actor)
         {
-            List<EdiModelCollection> result = new List<EdiModelCollection>(elements.Values);
-            result.Sort();
-
-            return result;
+            actors.Add(actor);
         }
 
-        public void Add(EdiModel model)
+        public void Add(Order order)
         {
-            Type t = model.GetType();
-
-            if(! elements.ContainsKey(t.Name))
-            {
-                elements[t.Name] = new EdiModelCollection(t);
-            }
-
-            elements[t.Name].Add(model);
+            orders.Add(order);
         }
 
         public EdiFile ToEdiFile()
         {
             EdiFile result = new EdiFile(firmId);
+            EdiTable actorsTable = EdiModel.EdiTableFor<Actor>();
 
-            foreach (EdiModelCollection collection in sortedElements())
+            foreach (Actor actor in actors)
             {
-                result.Add(collection.ToEdiSet());
+                actorsTable.Add(actor.ToEdiRow());
             }
+
+            result.Add(actorsTable);
+
+            foreach (Order order in orders)
+            {
+                EdiTable orderTable = EdiModel.EdiTableFor<Order>();
+                orderTable.Add(order.ToEdiRow());
+                result.Add(orderTable);
+
+                EdiTable orderLineTable = EdiModel.EdiTableFor<OrderLine>();
+
+                foreach (OrderLine orderline in order.OrderLines)
+                {
+                    orderLineTable.Add(orderline.ToEdiRow());
+                }
+
+                result.Add(orderLineTable);
+            }
+
+            result.RemoveUnusedFields();
 
             return result;
         }
