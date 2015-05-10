@@ -34,7 +34,7 @@ namespace Crondale.VismaEdi.Model
 
         public static EdiTable EdiTableFor<T>() where T:EdiModel
         {
-            String name = typeof(String).Name;
+            String name = typeof(T).Name;
             bool identifyByFirst = false;
 
             System.Attribute[] attrs = System.Attribute.GetCustomAttributes(typeof(T));
