@@ -15,6 +15,8 @@ namespace Crondale.VismaEdi.Model
         /// Quantity of product
         /// </summary>
         public String NoInvoAb { get; set; }
+        public String Descr { get; set; }
 
+        
     }
 }
