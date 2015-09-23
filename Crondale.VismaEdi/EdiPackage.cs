@@ -25,7 +25,8 @@ namespace Crondale.VismaEdi
 
         public void Add(Actor actor)
         {
-            actors.Add(actor);
+            if (actors.Find(i => i.CustNo == actor.CustNo) == null)
+                actors.Add(actor);
         }
 
         public void Add(Order order)
