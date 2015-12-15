@@ -17,6 +17,8 @@ build/
 csx/
 rcf/
 
+.sass-cache/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
